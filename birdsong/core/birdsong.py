@@ -40,6 +40,7 @@ class Birdsong(discord.Client):
         self,
         *,
         client_token: str,
+        default_roles: list[str],
         prefix: str,
         admin: dict,
         database: dict,
@@ -48,9 +49,10 @@ class Birdsong(discord.Client):
         """
         Passes along each configuration bundle to its subhandler.
         """
-        self.prefix: str = prefix
-        self.logger: logging.Logger = discord.client._log
         self.client_token: str = client_token
+        self.default_roles: list[str] = default_roles
+        self.logger: logging.Logger = discord.client._log
+        self.prefix: str = prefix
 
         utils.call_prepared(self.configure_admin, kwargs=admin)
         utils.call_prepared(self.configure_database, kwargs=database)
@@ -104,3 +106,11 @@ class Birdsong(discord.Client):
         the current context and executing them.
         """
         await self.ccmanager.execute_all(context=message)
+
+    async def on_member_join(self, member: discord.Member):
+        """
+        Adds the default roles to a member when they join.
+        """
+        guild = member.guild
+        matched = [role for role in guild.roles if role.name in self.default_roles]
+        await member.add_roles(matched)
