@@ -113,4 +113,4 @@ class Birdsong(discord.Client):
         """
         guild = member.guild
         matched = [role for role in guild.roles if role.name in self.default_roles]
-        await member.add_roles(matched)
+        await member.add_roles(*matched)

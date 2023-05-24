@@ -82,7 +82,7 @@ class Builtins:
         roles: list[discord.Role] = await guild.fetch_roles()
         matching: list[discord.Role] = [role for role in roles if role.name == name]
         if len(matching) > 0:
-            await user.add_roles([matching])
+            await user.add_roles(*[matching])
             return True
         return False
 
@@ -118,4 +118,4 @@ class Builtins:
         """
         Takes roles from a user by name and returns False if no matching roles were found.
         """
-        user.remove_roles([role for role in user.roles if role.name == name])
+        user.remove_roles(*[role for role in user.roles if role.name == name])
