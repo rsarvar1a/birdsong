@@ -1,0 +1,22 @@
+base:
+  ... # See https://discordpy.readthedocs.io/en/stable/api.html#client for available configuration optionos.
+
+birdsong:
+
+  client_token: "SECRET TOKEN FROM DISCORD DEVELOPER API"
+  prefix: "$"
+
+  admin:
+    admins:
+      - 1096985215911612546   # Pepper#3556
+    owner: 84045472511033344  # NaCl#4096
+
+  database:
+    hostname: "ip-or-dns:port"
+    username: "database username"
+    password: "database password"
+  
+  paths:
+    asset_path: "../my-setup/assets"
+    commands_path: "../my-setup/commands"
+    store_path: "../my-setup/store"
