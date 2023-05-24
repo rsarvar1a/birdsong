@@ -217,7 +217,7 @@ class CCManager:
 
         for path in pathlib.Path(self.commands_path).rglob("*.yaml"):
             with open(path, "r") as yaml_file:
-                command_spec = yaml.load(yaml_file, loader=yaml.CLoader)
+                command_spec = yaml.load(yaml_file, yaml.CLoader)
 
             actions = self.load_cc_response(
                 path=pathlib.Path(command_spec["actions"]), spec=path

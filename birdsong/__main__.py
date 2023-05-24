@@ -16,7 +16,7 @@ def main():
     cli_args = parser.parse_args()
 
     with open(cli_args.config, "r") as config_file:
-        options = yaml.load(config_file, loader=yaml.CLoader)
+        options = yaml.load(config_file, yaml.CLoader)
 
     client: birdsong.Birdsong = birdsong.Birdsong(**utils.prepare_kwargs(options))
     client.tweet_tweet()
