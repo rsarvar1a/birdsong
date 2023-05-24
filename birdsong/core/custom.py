@@ -129,6 +129,7 @@ class CCManager:
         Configures the command manager.
         """
         self.birdsong = bs_inst
+        self.commands: dict[str, CustomCommand] = {}
         self.commands_path = commands_path
         self.load_command_library()
 
@@ -188,7 +189,7 @@ class CCManager:
         associated with the trigger message.
         """
         candidates = []
-        for command in self.commands:
+        for command in self.commands.values():
             cmd, _ = self.build_command_line(
                 content=context.content, type=command.cmdtype
             )
@@ -213,9 +214,11 @@ class CCManager:
         """
         Loads the command library from the commands path.
         """
-        self.commands: list[CustomCommand] = []
-
         for path in pathlib.Path(self.commands_path).rglob("*.yaml"):
+            
+            if path in self.commands:
+                continue
+            
             with open(path, "r") as yaml_file:
                 command_spec = yaml.load(yaml_file, yaml.CLoader)
 
@@ -228,7 +231,7 @@ class CCManager:
 
             cc: CustomCommand = CustomCommand(path, actions, cmdtype, require, trigger)
             if self.validate_command(cc):
-                self.commands.append(cc)
+                self.commands.update({path: cc})
 
         self.birdsong.logger.info("Loaded {} commands.".format(len(self.commands)))
 
