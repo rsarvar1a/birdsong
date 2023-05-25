@@ -68,7 +68,7 @@ class Asset:
         """
         Provides the file.
         """
-        return self.file
+        return self
 
     def __exit__(self, type, value, traceback):
         """
