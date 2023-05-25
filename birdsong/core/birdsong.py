@@ -155,7 +155,7 @@ class Birdsong(discord.Client):
         """
         Runs the discord client loop.
         """
-        self.run(self.client_token)
+        self.run(self.client_token, log_handler=None)
 
     # RELEVANT DISCORD EVENTS
 
