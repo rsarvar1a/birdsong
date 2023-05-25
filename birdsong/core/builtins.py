@@ -11,6 +11,10 @@ class Builtins:
     """
     A class that wraps all builtin Birdsong functionality into one point of reference.
     """
+    
+    SUCCESS = 1
+    WARNING = 2
+    ERROR = 3
 
     def __init__(self, bs_inst: birdsong.Birdsong) -> None:
         """
@@ -90,7 +94,7 @@ class Builtins:
         self,
         context: discord.Message,
         contents: list[dict],
-        files: list[discord.File],
+        files: list[discord.File] = [],
         as_dm=False,
     ):
         """
@@ -111,6 +115,35 @@ class Builtins:
             await context.author.send(**kwargs)
         else:
             await context.channel.send(**kwargs)
+
+    def simple_embed_data(
+        title: str = None,
+        description: str = None,
+        image: str = None,
+        severity: int = None
+    ):
+        """
+        Creates a simple embed, with the severity in the description.
+        """
+        status_emote = {
+            Builtins.SUCCESS: ":white_check_mark:",
+            Builtins.WARNING: ":warning:",
+            Builtins.ERROR: ":x:"
+        }.get(severity, None)
+        
+        status_emote = "" if not status_emote else status_emote + " "
+        
+        content = {}
+        
+        if title:
+            content.update({"title": title})
+        if description:
+            content.update({"description": status_emote + description})
+        if image:
+            content.update({"image": image})
+        
+        if content is not {}:
+            return content
 
     async def take_role(
         self, context: discord.Message, user: discord.Member, name: str
