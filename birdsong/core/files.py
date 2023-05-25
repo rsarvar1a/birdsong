@@ -147,7 +147,7 @@ class AssetManager:
         else:
             self.test_mode_read_only(load_path, mode)
 
-        return Asset(load_path)
+        return Asset(load_path, mode)
 
     def load_from_store(self, file_path: str, mode: str = 'r') -> Asset:
         """
