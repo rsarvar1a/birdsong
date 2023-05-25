@@ -13,6 +13,7 @@ class AssetError(Exception):
     An exception used by the AssetManager.
     """
 
+    EXISTS = 0
     NOT_FOUND = 1
     NOT_FILE = 2
     NOT_DIR = 3
@@ -33,6 +34,8 @@ class AssetError(Exception):
         Gets the reason.
         """
         match self.type:
+            case AssetError.EXISTS:
+                return "path exists: {}".format(self.path)
             case AssetError.NOT_FOUND:
                 return "no such file or directory: {}".format(self.path)
             case AssetError.NOT_FILE:
@@ -160,6 +163,19 @@ class AssetManager:
 
         return Asset(store_path, mode)
 
+    def make_directory(self, dir_path: str):
+        """
+        Makes a directory at the desired path in the store path.
+        """
+        desired_path = pathlib.Path(os.path.join(self.store_path, dir_path)).resolve()
+        parent = desired_path.parent
+
+        self.test_manageable(parent)
+        self.test_is_directory(parent)
+        self.test_not_exists(desired_path)
+
+        os.mkdir(desired_path)
+
     def test_exists(self, path: pathlib.Path):
         """
         Tests a path to ensure it exists.
@@ -216,6 +232,15 @@ class AssetManager:
         """
         if mode not in Asset.READ_MODES:
             e = AssetError(path, AssetError.ASSET_READ_ONLY)
+            self.birdsong.logger.error(e.reason())
+            raise e
+
+    def test_not_exists(self, path: pathlib.Path):
+        """
+        Ensures the given path does not exist.
+        """
+        if path.exists():
+            e = AssetError(path, AssetError.EXISTS)
             self.birdsong.logger.error(e.reason())
             raise e
 
