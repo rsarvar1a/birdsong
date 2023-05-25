@@ -150,10 +150,9 @@ class CCManager:
         if type != CCTriggerType.CCTriggerCommand:
             return content, []
         else:
-            return (
-                content.split()[0].removeprefix(self.birdsong.prefix),
-                content.split()[1:] if len(content.split()) > 1 else [],
-            )
+            fragments = content.split()
+            args = [] if len(fragments) < 2 else fragments[1:]
+            return fragments[0].removeprefix(self.birdsong.prefix), args
 
     def build_require_block(
         self, context: discord.Message
@@ -172,7 +171,7 @@ class CCManager:
         Finds every matching command spec and executes them in sequence.
         """
         commands: list[CustomCommand] = self.find_commands(context=context)
-        self.birdsong.logger.info(
+        self.birdsong.logger.debug(
             "(id={}, content={}): Matched {} commands.".format(
                 context.id, context.content, len(commands)
             )
