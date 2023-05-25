@@ -22,4 +22,5 @@ birdsong:
   paths:
     asset_path: "../my-setup/assets"
     commands_path: "../my-setup/commands"
+    modules_path: "../my-setup/modules"
     store_path: "../my-setup/store"

@@ -128,7 +128,7 @@ class Birdsong(discord.Client):
         )
         self.builtins: builtins.Builtins = builtins.Builtins(self)
         self.ccmanager: custom.CCManager = custom.CCManager(self, commands_path)
-        self.configure_modules(modules_path)
+        self.configure_modules(modules_path = modules_path)
         
     def configure_modules(
         self, *, modules_path: str = ""
@@ -144,7 +144,7 @@ class Birdsong(discord.Client):
         """
         Loads "global" modules into the birdsong namespace, which can then be referenced by commands.
         """
-        for module_file in pathlib.Path(self.modules_path).rglob("*.py"):
+        for module_file in pathlib.Path(self.modules_path).glob("*.py"):
             module_name = pathlib.Path(module_file).stem
             import_spec = importlib.util.spec_from_file_location(module_name, module_file)
             module = importlib.util.module_from_spec(import_spec)

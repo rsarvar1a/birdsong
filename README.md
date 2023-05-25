@@ -129,6 +129,7 @@ The `birdsong` parameter provides access to the following:
 - `birdsong.builtins`: A collection of helper functions that are super helpful for simplifying script files.
 - `birdsong.ccmanager`: Underlying access to `birdsong`'s custom command framework. _(Use with caution.)_
 - `birdsong.dbmanager`: A wrapper around `birdsong`'s connection to `mongodb`.
+- `birdsong.modules`: A collection of modules loaded from the `modules` path. Modules are globally available in scripts.
 
 ***
 
@@ -153,6 +154,8 @@ my-command-project
    ├── commands
    │  ├── slap.py
    │  └── slap.yaml
+   ├── commands
+   │  └── mymodule.py
    └── store
 ```
 
@@ -184,6 +187,9 @@ my-projects
 │  │  └── README.md
 │  └── project-b 
 │     └── README.md
+├── modules
+│  ├── project-a.py
+│  └── project-b.py 
 └── store
    ├── project-a
    │  └── generated_a.png
