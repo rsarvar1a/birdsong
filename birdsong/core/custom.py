@@ -150,7 +150,7 @@ class CCManager:
         if type != CCTriggerType.CCTriggerCommand:
             return content, []
         else:
-            self.logger.debug("Content here: {}".format(content))
+            self.birdsong.logger.debug("Content here: {}".format(content))
             fragments = content.split()
             args = [] if len(fragments) < 2 else fragments[1:]
             return fragments[0].removeprefix(self.birdsong.prefix), args
