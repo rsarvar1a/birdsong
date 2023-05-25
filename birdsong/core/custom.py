@@ -90,7 +90,7 @@ class CustomCommand:
         in_category = self.require_category(requirements.get("category", ""))
         has_a_role = self.require_a_role(requirements.get("roles", set()))
 
-        return all(in_channel, in_category, has_a_role)
+        return all([in_channel, in_category, has_a_role])
 
     def require_channel(self, current_channel: str) -> bool:
         """
