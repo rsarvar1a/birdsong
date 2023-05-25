@@ -152,7 +152,7 @@ class CCManager:
         else:
             return (
                 content.split()[0].removeprefix(self.birdsong.prefix),
-                content.split()[1:],
+                content.split()[1:] if len(content.split()) > 1 else [],
             )
 
     def build_require_block(
@@ -173,7 +173,9 @@ class CCManager:
         """
         commands: list[CustomCommand] = self.find_commands(context=context)
         self.birdsong.logger.info(
-            "(id={}): Matched {} commands.".format(context.id, len(commands))
+            "(id={}, content={}): Matched {} commands.".format(
+                context.id, context.content, len(commands)
+            )
         )
         delete = False
 

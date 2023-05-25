@@ -109,7 +109,9 @@ class Builtins:
 
         kwargs = {}
         if len(embeds) > 0:
-            kwargs.update({"embed": embeds[0]} if len(embeds) == 1 else {"embeds": embeds})
+            kwargs.update(
+                {"embed": embeds[0]} if len(embeds) == 1 else {"embeds": embeds}
+            )
 
         if len(files) > 0:
             kwargs.update({"file": files[0]} if len(files) == 1 else {"files": files})
@@ -120,9 +122,9 @@ class Builtins:
             await context.channel.send(**kwargs)
 
     def simple_embed_data(
-        title = None,
-        description = None,
-        image = None,
+        title=None,
+        description=None,
+        image=None,
         severity: int = 2,
     ):
         """
@@ -137,9 +139,9 @@ class Builtins:
         status_emote = "" if not status_emote else status_emote + " "
 
         content = {}
-        
+
         if title:
-            content.update({"title": title})    
+            content.update({"title": title})
         if description:
             content.update({"description": status_emote + description})
         if image:
