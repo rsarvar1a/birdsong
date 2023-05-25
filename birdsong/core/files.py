@@ -44,7 +44,7 @@ class AssetError(Exception):
             case AssetError.UNKNOWN_MODE:
                 return "invalid file mode: {}".format(self.path)
             case AssetError.UNMANAGEABLE:
-                return "neither in asset path nor in store path: {}".format(self.path)
+                return "path is not in a managed path: {}".format(self.path)
             case _:
                 return "unknown error: {}".format(self.path)
 
@@ -99,6 +99,15 @@ class AssetManager:
         """
         return path.resolve().is_relative_to(self.asset_path)
 
+    def in_commands_path(self, path: pathlib.Path) -> bool:
+        """
+        Determines if a path is in the commands path or not.
+        This is technically not managed by AssetManager but it
+        is highly useful so we allow it.
+        """
+        commands_path = pathlib.Path(self.birdsong.ccmanager.commands_path).resolve()
+        return path.resolve().is_relative_to(commands_path)
+
     def in_store_path(self, path: pathlib.Path) -> bool:
         """
         Determines if a path is in the store path or not.
@@ -133,10 +142,10 @@ class AssetManager:
         self.test_manageable(load_path)
         self.test_is_file(load_path)
 
-        if self.in_asset_path(load_path):
-            self.test_mode_read_only(load_path, mode)
-        else:
+        if self.in_store_path(load_path):
             self.test_mode_valid(load_path, mode)
+        else:
+            self.test_mode_read_only(load_path, mode)
 
         return Asset(load_path)
 
@@ -187,7 +196,7 @@ class AssetManager:
         Ensures the file is manageable by birdsong. This check constrains
         the abuse of load_precise to read into the larger filesystem.
         """
-        if (not self.in_asset_path(path)) and (not self.in_store_path(path)):
+        if (not self.in_asset_path(path)) and (not self.in_commands_path(path)) and (not self.in_store_path(path)):
             e = AssetError(path, AssetError.UNMANAGEABLE)
             self.birdsong.logger.error(e.reason())
             raise e
