@@ -167,6 +167,10 @@ class Birdsong(discord.Client):
         if message.author.id == self.user.id:
             return
 
+        self.logger.debug("from={}#{}, content={}".format(
+            message.author.name, message.author.discriminator, message.content
+        ))
+
         await self.ccmanager.execute_all(context=message)
 
     async def on_member_join(self, member: discord.Member):
