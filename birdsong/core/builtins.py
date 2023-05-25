@@ -120,10 +120,10 @@ class Builtins:
             await context.channel.send(**kwargs)
 
     def simple_embed_data(
-        title: str = None,
-        description: str = None,
-        image: str = None,
-        severity: int = None,
+        title = None,
+        description = None,
+        image = None,
+        severity: int = 2,
     ):
         """
         Creates a simple embed, with the severity in the description.
@@ -137,9 +137,9 @@ class Builtins:
         status_emote = "" if not status_emote else status_emote + " "
 
         content = {}
-
+        
         if title:
-            content.update({"title": title})
+            content.update({"title": title})    
         if description:
             content.update({"description": status_emote + description})
         if image:
