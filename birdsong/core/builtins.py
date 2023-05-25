@@ -122,6 +122,8 @@ class Builtins:
             await context.channel.send(**kwargs)
 
     def simple_embed_data(
+        self,
+        *,
         title=None,
         description=None,
         image=None,
@@ -147,8 +149,7 @@ class Builtins:
         if image:
             content.update({"image": image})
 
-        if content is not {}:
-            return content
+        return content
 
     async def take_role(
         self, context: discord.Message, user: discord.Member, name: str
