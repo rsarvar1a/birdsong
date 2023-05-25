@@ -134,6 +134,9 @@ class Birdsong(discord.Client):
         Handles an incoming message by listing each custom command that satisfies
         the current context and executing them.
         """
+        if message.author.id == self.user.id:
+            return
+
         await self.ccmanager.execute_all(context=message)
 
     async def on_member_join(self, member: discord.Member):
