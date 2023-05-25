@@ -108,8 +108,11 @@ class Builtins:
             embeds.append(embed)
 
         kwargs = {}
-        kwargs.update({"embed": embeds[0]} if len(embeds) == 1 else {"embeds": embeds})
-        kwargs.update({"file": files[0]} if len(files) == 1 else {"files": files})
+        if len(embeds) > 0:
+            kwargs.update({"embed": embeds[0]} if len(embeds) == 1 else {"embeds": embeds})
+
+        if len(files) > 0:
+            kwargs.update({"file": files[0]} if len(files) == 1 else {"files": files})
 
         if as_dm:
             await context.author.send(**kwargs)
