@@ -171,6 +171,9 @@ class CCManager:
         Finds every matching command spec and executes them in sequence.
         """
         commands: list[CustomCommand] = self.find_commands(context=context)
+        self.birdsong.logger.info("(id={}): Matched {} commands.".format(
+            context.id, len(commands)
+        ))
         delete = False
 
         for command in commands:
@@ -215,10 +218,9 @@ class CCManager:
         Loads the command library from the commands path.
         """
         for path in pathlib.Path(self.commands_path).rglob("*.yaml"):
-            
             if path in self.commands:
                 continue
-            
+
             with open(path, "r") as yaml_file:
                 command_spec = yaml.load(yaml_file, yaml.CLoader)
 

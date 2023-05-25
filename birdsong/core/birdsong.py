@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import discord
 import logging
+import sys
 import typing
 
 from birdsong.core import builtins
@@ -44,6 +45,7 @@ class Birdsong(discord.Client):
         prefix: str,
         admin: dict,
         database: dict,
+        logs: dict,
         paths: dict,
     ):
         """
@@ -51,9 +53,9 @@ class Birdsong(discord.Client):
         """
         self.client_token: str = client_token
         self.default_roles: list[str] = default_roles
-        self.logger: logging.Logger = discord.client._log
         self.prefix: str = prefix
 
+        utils.call_prepared(self.configure_logging, kwargs=logs)
         utils.call_prepared(self.configure_admin, kwargs=admin)
         utils.call_prepared(self.configure_database, kwargs=database)
         utils.call_prepared(self.configure_managers, kwargs=paths)
@@ -79,6 +81,33 @@ class Birdsong(discord.Client):
         self.dbmanager: database.DataManager = database.DataManager(
             self, hostname, username, password
         )
+
+    def configure_logging(self, *, level: int = 2):
+        """
+        Sets up birdsong's logger.
+        """
+        severity = {
+            0: logging.ERROR,
+            1: logging.WARN,
+            2: logging.INFO,
+            3: logging.DEBUG,
+        }.get(level, logging.INFO)
+
+        self.logger = logging.getLogger("birdsong")
+        self.logger.setLevel(severity)
+
+        self.handler = logging.StreamHandler()
+        self.handler.setLevel(severity)
+        self.logger.addHandler(self.handler)
+
+        if utils.stream_supports_colour(self.handler.stream):
+            self.formatter = utils.StreamFormatter()
+        else:
+            dt_fmt = "%Y-%m-%d %H:%M:%S"
+            self.formatter = logging.Formatter(
+                "[{asctime}] [{levelname:<8}] {name}: {message}", dt_fmt, style="{"
+            )
+        self.handler.setFormatter(self.formatter)
 
     def configure_managers(
         self, *, asset_path: str = "", commands_path: str = "", store_path: str = ""

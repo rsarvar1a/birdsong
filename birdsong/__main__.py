@@ -18,7 +18,9 @@ def main():
     with open(cli_args.config, "r") as config_file:
         options = yaml.load(config_file, yaml.CLoader)
 
-    client: birdsong.Birdsong = birdsong.Birdsong(options.get("base", {}), options.get("birdsong", {}))
+    client: birdsong.Birdsong = birdsong.Birdsong(
+        options.get("base", {}), options.get("birdsong", {})
+    )
     client.tweet_tweet()
 
 

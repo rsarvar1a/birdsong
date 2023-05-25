@@ -16,6 +16,9 @@ birdsong:
     username: "database username"
     password: "database password"
   
+  logs:
+    level: 2
+
   paths:
     asset_path: "../my-setup/assets"
     commands_path: "../my-setup/commands"
