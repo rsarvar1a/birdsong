@@ -90,6 +90,15 @@ class Builtins:
             return True
         return False
 
+    def make_error(self, e: Exception) -> dict:
+        """
+        Given an exception, creates an embed with severity ERROR.
+        """
+        return {
+            "description": e.args[0],
+            "severity": Builtins.ERROR
+        }
+
     async def send_message(
         self,
         context: discord.Message,
