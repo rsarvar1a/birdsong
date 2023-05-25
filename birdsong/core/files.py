@@ -125,7 +125,8 @@ class AssetManager:
         asset and/or store path.
         """
         if relative is not None:
-            load_path = pathlib.Path(os.path.join(relative, file_path)).resolve()
+            relative_dir = pathlib.Path(relative).parent
+            load_path = pathlib.Path(os.path.join(relative_dir, file_path)).resolve()
         else:
             load_path = pathlib.Path(file_path).resolve()
 

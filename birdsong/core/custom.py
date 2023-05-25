@@ -152,6 +152,8 @@ class CCManager:
         else:
             self.birdsong.logger.debug("Content here: {}".format(content))
             fragments = content.split()
+            if len(fragments) == 0:
+                return "", []
             args = [] if len(fragments) < 2 else fragments[1:]
             return fragments[0].removeprefix(self.birdsong.prefix), args
 

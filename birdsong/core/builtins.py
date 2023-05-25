@@ -94,10 +94,10 @@ class Builtins:
         """
         Given an exception, creates an embed with severity ERROR.
         """
-        return {
-            "description": e.args[0],
-            "severity": Builtins.ERROR
-        }
+        return self.simple_embed_data(
+            description=e.args[0],
+            severity=Builtins.ERROR
+        )
 
     async def send_message(
         self,
