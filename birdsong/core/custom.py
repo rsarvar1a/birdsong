@@ -201,10 +201,13 @@ class CCManager:
                 candidates.append(command)
         return candidates
 
-    def load_cc_response(self, path: pathlib.Path, spec: pathlib.Path) -> CCActionsType:
+    def load_cc_response(self, path: str, spec: pathlib.Path) -> CCActionsType:
         """
         Opens a python file at the given path, and loads the coroutine named action from it.
         """
+        if path == "":
+            return CCManager.no_such_action
+        
         code_path: pathlib.Path = utils.resolve_path(path=path, relative=spec)
 
         import_spec = importlib.util.spec_from_file_location(code_path.stem, code_path)
@@ -225,11 +228,11 @@ class CCManager:
                 command_spec = yaml.load(yaml_file, yaml.CLoader)
 
             actions = self.load_cc_response(
-                path=pathlib.Path(command_spec["actions"]), spec=path
+                path=command_spec.get("actions", ""), spec=path
             )
-            cmdtype = CCTriggerType.from_string(command_spec["cmdtype"])
-            require = command_spec["require"]
-            trigger = command_spec["trigger"]
+            cmdtype = CCTriggerType.from_string(command_spec.get("cmdtype", ""))
+            require = command_spec.get("require", {})
+            trigger = command_spec.get("trigger", "")
 
             cc: CustomCommand = CustomCommand(path, actions, cmdtype, require, trigger)
             if self.validate_command(cc):
@@ -237,10 +240,25 @@ class CCManager:
 
         self.birdsong.logger.info("Loaded {} commands.".format(len(self.commands)))
 
+    @classmethod
+    async def no_such_action(cls, birdsong: any, context: discord.Message, cmd: str, args: list[str]) -> bool:
+        """
+        Does nothing.
+        """
+        return False
+
     def validate_command(self, command: CustomCommand) -> bool:
         """
         Determines whether the custom command is valid.
         """
+        if command.trigger == "":
+            self.birdsong.logger.warn(
+                "Command has empty trigger. (defined at: {})".format(
+                    command.path
+                )
+            )
+            return False
+        
         if command.cmdtype == CCTriggerType.CCTriggerNone:
             self.birdsong.logger.warn(
                 "Command has invalid cmdtype None. (defined at: {})".format(
