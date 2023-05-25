@@ -52,6 +52,7 @@ class CustomCommand:
 
     def __init__(
         self,
+        *,
         path: pathlib.Path,
         trigger: str,
         cmdtype: CCTriggerType,
@@ -171,9 +172,9 @@ class CCManager:
         Finds every matching command spec and executes them in sequence.
         """
         commands: list[CustomCommand] = self.find_commands(context=context)
-        self.birdsong.logger.info("(id={}): Matched {} commands.".format(
-            context.id, len(commands)
-        ))
+        self.birdsong.logger.info(
+            "(id={}): Matched {} commands.".format(context.id, len(commands))
+        )
         delete = False
 
         for command in commands:
@@ -207,7 +208,7 @@ class CCManager:
         """
         if path == "":
             return CCManager.no_such_action
-        
+
         code_path: pathlib.Path = utils.resolve_path(path=path, relative=spec)
 
         import_spec = importlib.util.spec_from_file_location(code_path.stem, code_path)
@@ -234,14 +235,22 @@ class CCManager:
             require = command_spec.get("require", {})
             trigger = command_spec.get("trigger", "")
 
-            cc: CustomCommand = CustomCommand(path, actions, cmdtype, require, trigger)
+            cc: CustomCommand = CustomCommand(
+                path=path,
+                actions=actions,
+                cmdtype=cmdtype,
+                require=require,
+                trigger=trigger,
+            )
             if self.validate_command(cc):
                 self.commands.update({path: cc})
 
         self.birdsong.logger.info("Loaded {} commands.".format(len(self.commands)))
 
     @classmethod
-    async def no_such_action(cls, birdsong: any, context: discord.Message, cmd: str, args: list[str]) -> bool:
+    async def no_such_action(
+        cls, birdsong: any, context: discord.Message, cmd: str, args: list[str]
+    ) -> bool:
         """
         Does nothing.
         """
@@ -253,12 +262,10 @@ class CCManager:
         """
         if command.trigger == "":
             self.birdsong.logger.warn(
-                "Command has empty trigger. (defined at: {})".format(
-                    command.path
-                )
+                "Command has empty trigger. (defined at: {})".format(command.path)
             )
             return False
-        
+
         if command.cmdtype == CCTriggerType.CCTriggerNone:
             self.birdsong.logger.warn(
                 "Command has invalid cmdtype None. (defined at: {})".format(
