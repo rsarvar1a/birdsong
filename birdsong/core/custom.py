@@ -150,7 +150,6 @@ class CCManager:
         if type != CCTriggerType.CCTriggerCommand:
             return content, []
         else:
-            self.birdsong.logger.debug("Content here: {}".format(content))
             fragments = content.split()
             if len(fragments) == 0:
                 return "", []
