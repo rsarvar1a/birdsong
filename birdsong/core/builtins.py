@@ -131,7 +131,10 @@ class Builtins:
             kwargs.update({"file": files[0]} if len(files) == 1 else {"files": files})
 
         if as_dm:
-            await context.author.dm_channel.send(**kwargs)
+            dm_channel = context.author.dm_channel
+            if dm_channel is None:
+                dm_channel = await context.author.create_dm()
+            await dm_channel.send(**kwargs)
             self.birdsong.logger.info("sent public message: {}".format(context.author.id))
         else:
             await context.channel.send(**kwargs)
