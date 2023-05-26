@@ -87,7 +87,9 @@ class Builtins:
         roles: list[discord.Role] = await guild.fetch_roles()
         matching: list[discord.Role] = [role for role in roles if role.name == name]
         if len(matching) > 0:
+            self.birdsong.logger.debug("matched roles for {}: {}".format(name, ", ".join(r.name for r in matching)))
             await user.add_roles(*[matching])
+            self.birdsong.logger.info("gave roles to {}: {}".format(user.id, ", ".join(r.name for r in matching)))
             return True
         return False
 
@@ -135,10 +137,10 @@ class Builtins:
             if dm_channel is None:
                 dm_channel = await context.author.create_dm()
             await dm_channel.send(**kwargs)
-            self.birdsong.logger.info("sent public message: {}".format(context.author.id))
+            self.birdsong.logger.info("sent direct message to: {}".format(context.author.id))
         else:
             await context.channel.send(**kwargs)
-            self.birdsong.logger.info("sent direct message: {}".format(context.author.id))
+            self.birdsong.logger.info("sent public message to: {}".format(context.author.id))
 
     def simple_embed_data(
         self,
