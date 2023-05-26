@@ -157,7 +157,7 @@ class Birdsong(discord.Client):
             import_spec.loader.exec_module(module)
             setattr(self.modules, module_name, module)
 
-        self.logger.info("loaded modules: {}".format(dir(self.modules)))
+        self.logger.info("loaded modules: {}".format(self.builtins.list_modules()))
 
     def tweet_tweet(self) -> typing.NoReturn:
         """

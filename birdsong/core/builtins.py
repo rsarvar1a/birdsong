@@ -91,6 +91,13 @@ class Builtins:
             return True
         return False
 
+    def list_modules(self) -> str:
+        """
+        Returns a command separated list of loaded modules.
+        """
+        attrs = dir(self.birdsong.modules)
+        return ", ".join([attr for attr in attrs if not attr.startswith('_')])
+
     def make_error(self, e: Exception) -> dict:
         """
         Given an exception, creates an embed with severity ERROR.
