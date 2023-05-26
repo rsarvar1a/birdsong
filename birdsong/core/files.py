@@ -264,13 +264,13 @@ class AssetManager:
         """
         Given an asset location in the asset path, returns the absolute path.
         """
-        return pathlib.Path(os.path.join(self.asset_path, asset_path))
+        return pathlib.Path(self.asset_path, asset_path)
 
     def translate_store_path(self, store_path: str) -> pathlib.Path:
         """
         Given an asset location in the store path, returns the absolute path.
         """
-        return pathlib.Path(os.path.join(self.store_path, store_path))
+        return pathlib.Path(self.store_path, store_path)
 
     def write(self, file_path: str) -> Asset:
         """

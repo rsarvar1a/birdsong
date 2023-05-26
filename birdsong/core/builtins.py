@@ -132,8 +132,10 @@ class Builtins:
 
         if as_dm:
             await context.author.dm_channel.send(**kwargs)
+            self.birdsong.logger.info("sent public message: {}".format(context.author.id))
         else:
             await context.channel.send(**kwargs)
+            self.birdsong.logger.info("sent direct message: {}".format(context.author.id))
 
     def simple_embed_data(
         self,
