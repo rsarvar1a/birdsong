@@ -124,7 +124,7 @@ class AssetManager:
         asset_path = self.translate_asset_path(file_path)
 
         self.test_is_file(asset_path)
-        self.test_read_only(asset_path, mode)
+        self.test_mode_read_only(asset_path, mode)
 
         return Asset(asset_path, mode)
 
@@ -143,7 +143,11 @@ class AssetManager:
             load_path = pathlib.Path(file_path).resolve()
 
         self.test_manageable(load_path)
-        self.test_is_file(load_path)
+
+        if mode in Asset.READ_MODES:
+            self.test_is_file(load_path)
+        else:
+            self.test_is_directory(load_path.parent)
 
         if self.in_store_path(load_path):
             self.test_mode_valid(load_path, mode)
@@ -158,7 +162,10 @@ class AssetManager:
         """
         store_path = self.translate_store_path(file_path)
 
-        self.test_is_file(store_path)
+        if mode in Asset.READ_MODES:
+            self.test_is_file(store_path)
+        else:
+            self.test_is_directory(store_path.parent)
         self.test_mode_valid(store_path, mode)
 
         return Asset(store_path, mode)
