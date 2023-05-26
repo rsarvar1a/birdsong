@@ -157,6 +157,8 @@ class Birdsong(discord.Client):
             import_spec.loader.exec_module(module)
             setattr(self.modules, module_name, module)
 
+        self.logger.info("loaded modules: {}".format(dir(self.modules)))
+
     def tweet_tweet(self) -> typing.NoReturn:
         """
         Runs the discord client loop.
