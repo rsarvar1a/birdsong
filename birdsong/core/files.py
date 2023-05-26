@@ -179,6 +179,8 @@ class AssetManager:
             self.test_is_directory(parent)
             os.mkdir(desired_path)
 
+        self.birdsong.logger.info("created directory: {}".format(desired_path))
+
     def test_exists(self, path: pathlib.Path):
         """
         Tests a path to ensure it exists.
