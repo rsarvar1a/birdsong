@@ -163,7 +163,7 @@ class AssetManager:
 
         return Asset(store_path, mode)
 
-    def make_directory(self, dir_path: str):
+    def make_directory(self, dir_path: str, parents = False):
         """
         Makes a directory at the desired path in the store path.
         """
@@ -171,10 +171,13 @@ class AssetManager:
         parent = desired_path.parent
 
         self.test_manageable(parent)
-        self.test_is_directory(parent)
         self.test_not_exists(desired_path)
 
-        os.mkdir(desired_path)
+        if parents:
+            os.makedirs(desired_path)
+        else:
+            self.test_is_directory(parent)
+            os.mkdir(desired_path)
 
     def test_exists(self, path: pathlib.Path):
         """
@@ -255,3 +258,9 @@ class AssetManager:
         Given an asset location in the store path, returns the absolute path.
         """
         return pathlib.Path(os.path.join(self.store_path, store_path))
+
+    def write(self, file_path: str) -> Asset:
+        """
+        Returns a writeable Asset in the store path.
+        """
+        return self.load_from_store(file_path, mode='w')
