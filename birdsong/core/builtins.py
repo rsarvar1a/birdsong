@@ -131,7 +131,7 @@ class Builtins:
             kwargs.update({"file": files[0]} if len(files) == 1 else {"files": files})
 
         if as_dm:
-            await context.author.send(**kwargs)
+            await context.author.dm_channel.send(**kwargs)
         else:
             await context.channel.send(**kwargs)
 
