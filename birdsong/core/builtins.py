@@ -15,6 +15,7 @@ class Builtins:
     SUCCESS = 1
     WARNING = 2
     ERROR = 3
+    NONE = 4
 
     def __init__(self, bs_inst: birdsong.Birdsong) -> None:
         """
@@ -133,7 +134,7 @@ class Builtins:
         title=None,
         description=None,
         image=None,
-        severity: int = 2,
+        severity: int = NONE,
     ):
         """
         Creates a simple embed, with the severity in the description.
