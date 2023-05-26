@@ -20,6 +20,7 @@ class ModuleCollection(object):
     """
     Empty class on which birdsong sets modules as attributes.
     """
+
     pass
 
 
@@ -118,7 +119,12 @@ class Birdsong(discord.Client):
         self.handler.setFormatter(self.formatter)
 
     def configure_managers(
-        self, *, asset_path: str = "", commands_path: str = "", modules_path: str = "", store_path: str = ""
+        self,
+        *,
+        asset_path: str = "",
+        commands_path: str = "",
+        modules_path: str = "",
+        store_path: str = "",
     ):
         """
         Configures managers for various types of program flows.
@@ -128,25 +134,25 @@ class Birdsong(discord.Client):
         )
         self.builtins: builtins.Builtins = builtins.Builtins(self)
         self.ccmanager: custom.CCManager = custom.CCManager(self, commands_path)
-        self.configure_modules(modules_path = modules_path)
-        
-    def configure_modules(
-        self, *, modules_path: str = ""
-    ):
+        self.configure_modules(modules_path=modules_path)
+
+    def configure_modules(self, *, modules_path: str = ""):
         """
         Configures the modules path.
         """
         self.modules_path = modules_path
         self.modules = ModuleCollection()
         self.load_modules()
-    
+
     def load_modules(self):
         """
         Loads "global" modules into the birdsong namespace, which can then be referenced by commands.
         """
         for module_file in pathlib.Path(self.modules_path).glob("*.py"):
             module_name = pathlib.Path(module_file).stem
-            import_spec = importlib.util.spec_from_file_location(module_name, module_file)
+            import_spec = importlib.util.spec_from_file_location(
+                module_name, module_file
+            )
             module = importlib.util.module_from_spec(import_spec)
             import_spec.loader.exec_module(module)
             setattr(self.modules, module_name, module)
@@ -167,9 +173,11 @@ class Birdsong(discord.Client):
         if message.author.bot:
             return
 
-        self.logger.debug("from={}#{}, content={}".format(
-            message.author.name, message.author.discriminator, message.content
-        ))
+        self.logger.debug(
+            "from={}#{}, content={}".format(
+                message.author.name, message.author.discriminator, message.content
+            )
+        )
 
         await self.ccmanager.execute_all(context=message)
 

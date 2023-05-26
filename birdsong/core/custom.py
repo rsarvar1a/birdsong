@@ -164,7 +164,9 @@ class CCManager:
         """
         return {
             "channel": context.channel.name,
-            "category": context.channel.category.name if context.channel.category else "",
+            "category": context.channel.category.name
+            if context.channel.category
+            else "",
             "roles": set(map(lambda role: role.name, context.author.roles)),
         }
 

@@ -57,8 +57,8 @@ class Asset:
     A wrapper for AssetManager objects that allows for context management.
     """
 
-    READ_MODES = ['r', 'rb']
-    FILE_MODES = ['r', 'rb', 'w', 'wb']
+    READ_MODES = ["r", "rb"]
+    FILE_MODES = ["r", "rb", "w", "wb"]
 
     def __init__(self, path: pathlib.Path, mode: str):
         """
@@ -128,7 +128,7 @@ class AssetManager:
 
         return Asset(asset_path, mode)
 
-    def load_precise(self, file_path: str, relative = None, mode: str = 'r') -> Asset:
+    def load_precise(self, file_path: str, relative=None, mode: str = "r") -> Asset:
         """
         Returns an Asset wrapper around the requested file,by bypassing
         birdsong's configured asset and store paths. This call is extremely
@@ -152,7 +152,7 @@ class AssetManager:
 
         return Asset(load_path, mode)
 
-    def load_from_store(self, file_path: str, mode: str = 'r') -> Asset:
+    def load_from_store(self, file_path: str, mode: str = "r") -> Asset:
         """
         Loads an asset from the store path.
         """
@@ -163,7 +163,7 @@ class AssetManager:
 
         return Asset(store_path, mode)
 
-    def make_directory(self, dir_path: str, parents = False):
+    def make_directory(self, dir_path: str, parents=False):
         """
         Makes a directory at the desired path in the store path.
         """
@@ -215,7 +215,11 @@ class AssetManager:
         Ensures the file is manageable by birdsong. This check constrains
         the abuse of load_precise to read into the larger filesystem.
         """
-        if (not self.in_asset_path(path)) and (not self.in_commands_path(path)) and (not self.in_store_path(path)):
+        if (
+            (not self.in_asset_path(path))
+            and (not self.in_commands_path(path))
+            and (not self.in_store_path(path))
+        ):
             e = AssetError(path, AssetError.UNMANAGEABLE)
             self.birdsong.logger.error(e.reason())
             raise e
@@ -263,4 +267,4 @@ class AssetManager:
         """
         Returns a writeable Asset in the store path.
         """
-        return self.load_from_store(file_path, mode='w')
+        return self.load_from_store(file_path, mode="w")
