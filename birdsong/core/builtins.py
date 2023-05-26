@@ -34,6 +34,7 @@ class Builtins:
         context: discord.Message,
         name: str,
         type: discord.ChannelType,
+        category=None,
         overwrites=None,
         duplicate=False,
     ) -> discord.abc.GuildChannel | None:
@@ -44,12 +45,12 @@ class Builtins:
 
         if not duplicate:
             channels: list[discord.abc.GuildChannel] = await guild.fetch_channels()
-            if any(
-                channel.name == name and channel.type == type for channel in channels
-            ):
+            if any(channel.name == name and channel.type == type for channel in channels):
                 return None
 
         kwargs = {}
+        if category:
+            kwargs.update({"category": category})
         if overwrites:
             kwargs.update({"overwrites": overwrites})
 
@@ -87,10 +88,14 @@ class Builtins:
         roles: list[discord.Role] = await guild.fetch_roles()
         matching: list[discord.Role] = [role for role in roles if role.name == name]
         if len(matching) > 0:
-            self.birdsong.logger.debug("matched roles for {}: {}".format(name, ", ".join(r.name for r in matching)))
-            await user.add_roles(*[matching])
-            self.birdsong.logger.info("gave roles to {}: {}".format(user.id, ", ".join(r.name for r in matching)))
-            return True
+            try:
+                await user.add_roles(*[matching])
+                self.birdsong.logger.info("gave roles to {}: {}".format(user.id, ", ".join(r.name for r in matching)))
+                return True
+            except Exception as e:
+                err_embed = self.make_error(e)
+                await self.send_message(context, [err_embed])
+                return False
         return False
 
     def list_module(self, module) -> str:
@@ -178,4 +183,10 @@ class Builtins:
         """
         Takes roles from a user by name and returns False if no matching roles were found.
         """
-        user.remove_roles(*[role for role in user.roles if role.name == name])
+        try:
+            user.remove_roles(*[role for role in user.roles if role.name == name])
+            return True
+        except Exception as e:
+            err_embed = self.make_error(e)
+            await self.send_message(context, [err_embed])
+            return False
