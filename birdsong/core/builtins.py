@@ -89,7 +89,7 @@ class Builtins:
         matching: list[discord.Role] = [role for role in roles if role.name == name]
         if len(matching) > 0:
             try:
-                await user.add_roles(*[matching])
+                await user.add_roles(*matching)
                 self.birdsong.logger.info("gave roles to {}: {}".format(user.id, ", ".join(r.name for r in matching)))
                 return True
             except Exception as e:
